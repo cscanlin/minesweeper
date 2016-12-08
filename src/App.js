@@ -21,20 +21,20 @@ class App extends Component {
     this.state = {
       gameState: null,
       timeElapsed: 0,
-      gridWidth: 10,
-      gridHeight: 10,
-      numMines: 10,
+      gridWidth: null,
+      gridHeight: null,
+      numMines: null,
       cellData: [],
       timer: null,
     }
     this.exploreCell = this.exploreCell.bind(this)
     this.flagCell = this.flagCell.bind(this)
-    this.restartGame = this.restartGame.bind(this)
+    this.resetGame = this.resetGame.bind(this)
     this.updateTimer = this.updateTimer.bind(this)
   }
 
   componentDidMount() {
-    this.populateInitialCellData()
+    this.resetGame()
   }
 
   numUnminedCells() {
@@ -47,6 +47,10 @@ class App extends Component {
 
   numUnflaggedRemaining() {
     return this.state.numMines - this.getflaggedCells().length
+  }
+
+  loadOptions(callback) {
+    this.setState({gridWidth: 10, gridHeight: 10, numMines: 40}, callback)
   }
 
   getAdjacentCells(centerCell, allCells) {
@@ -94,8 +98,12 @@ class App extends Component {
     this.setState({timeElapsed: this.state.timeElapsed + 1})
   }
 
+  // clickCell(x, y) {
+  //
+  // }
+
   exploreCell(x, y) {
-    if (this.state.cellData.filter(cell => cell.isExplored).length === 0) {
+    if (this.state.gameState !== 'playing') {
       this.startTimer()
     }
     var cellData = this.state.cellData
@@ -125,27 +133,27 @@ class App extends Component {
     this.setState({cellData : cellData})
   }
 
+  startGame() {
+    this.populateInitialCellData()
+  }
+
   gameLost() {
-      console.log('LOST');
       clearInterval(this.state.timer);
       this.state.cellData.forEach(cell =>
         cell.isExplored = true
       )
       this.setState({gameState: 'lost', cellData: this.state.cellData})
-      console.log(this.state.gameState);
   }
 
   gameWon() {
-      console.log('WON');
       clearInterval(this.state.timer);
       this.setState({gameState: 'won'})
-      console.log(this.state.gameState);
   }
 
-  restartGame() {
+  resetGame() {
     clearInterval(this.state.timer);
-    this.setState({timeElapsed: 0})
-    this.populateInitialCellData()
+    this.setState({gameState: null, timeElapsed: 0})
+    this.loadOptions(this.populateInitialCellData)
   }
 
   render() {
@@ -157,7 +165,7 @@ class App extends Component {
           minesRemaining={this.numUnflaggedRemaining()}
           gameState={this.state.gameState}
           timeElapsed={this.state.timeElapsed}
-          restartGame={this.restartGame}
+          resetGame={this.resetGame}
         />
       <div className="grid">
           {rowsNums.map((row) =>
@@ -167,7 +175,7 @@ class App extends Component {
               )}
             </div>
           )}
-        </div>
+      </div>
     </div>
     );
   }
