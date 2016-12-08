@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Cell from './components/cell';
-import Header from './components/header';
+import Header from './components/Header';
+import Grid from './components/Grid';
 import {getAdjacentCells, createGridCells} from './utils/cellUtils';
 
 const CELLWIDTH = 22
@@ -114,7 +114,7 @@ class App extends Component {
   }
 
   render() {
-    const rowsNums = Array(this.state.gridHeight).fill().map((_, row) => row)
+
     return (
       <div className='app' style={ {width: this.state.gridWidth * CELLWIDTH} }>
         <Header
@@ -123,15 +123,12 @@ class App extends Component {
           timeElapsed={this.state.timeElapsed}
           resetGame={this.resetGame}
         />
-      <div className="grid">
-          {rowsNums.map((row) =>
-            <div key={row} className="row">
-              {this.state.cellData.filter(cell => cell.y === row).sort((a, b) => a.x > b.x).map((cell, col) =>
-                <Cell key={(row, col)} {...cell} clickCell={this.clickCell} flagCell={this.flagCell}/>
-              )}
-            </div>
-          )}
-      </div>
+        <Grid
+          gridHeight={this.state.gridHeight}
+          cellData={this.state.cellData}
+          clickCell={this.clickCell}
+          flagCell={this.flagCell}
+        />
     </div>
     );
   }
