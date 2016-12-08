@@ -16,8 +16,23 @@
   color: #FF0000;
   padding: 0px 5px;
 }
-.state {
+.state-container {
   margin: 0 auto;
+}
+.state-indicator {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+.playing-state,
+.null-state {
+  background-color: yellow;
+}
+.won-state {
+  background-color: green;
+}
+.lost-state {
+  background-color: red;
 }
 
 .row {

@@ -1,19 +1,9 @@
 import React, { Component } from 'react';
 import Cell from './components/cell';
 import Header from './components/header';
+import {getAdjacentCells, createGridCells} from './utils/cellUtils';
 
 const CELLWIDTH = 22
-
-const adjacentDirections = {
-  N: {x: 0, y:1},
-  NE: {x: 1, y:1},
-  E: {x: 1, y:0},
-  SE: {x: 1, y:-1},
-  S: {x: 0, y:-1},
-  SW: {x: -1, y:-1},
-  W: {x: -1, y:0},
-  NW: {x: -1, y:1},
-}
 
 class App extends Component {
   constructor(props) {
@@ -21,9 +11,9 @@ class App extends Component {
     this.state = {
       gameState: null,
       timeElapsed: 0,
+      numMines: null,
       gridWidth: null,
       gridHeight: null,
-      numMines: null,
       cellData: [],
       timer: null,
     }
@@ -36,6 +26,11 @@ class App extends Component {
 
   componentDidMount() {
     this.resetGame()
+  }
+
+  setInititialCellData() {
+    const cellData = createGridCells(this.state.numMines, this.state.gridWidth, this.state.gridHeight)
+    this.setState({cellData: cellData})
   }
 
   numSafeCells() {
@@ -52,44 +47,6 @@ class App extends Component {
 
   loadOptions(callback) {
     this.setState({gridWidth: 10, gridHeight: 10, numMines: 10}, callback)
-  }
-
-  getAdjacentCells(centerCell, allCells) {
-    var adjacentCells = []
-    for (var direction in adjacentDirections) {
-      var xDiff = adjacentDirections[direction].x
-      var yDiff = adjacentDirections[direction].y
-      var adjCell = allCells.find(adjCell => adjCell.x === centerCell.x + xDiff && adjCell.y === centerCell.y + yDiff)
-      if (adjCell) {
-        adjacentCells.push(adjCell)
-      }
-    }
-    return adjacentCells
-  }
-
-  populateInitialCellData() {
-    var cells = []
-    var minesNeeded = this.state.numMines
-    var spacesRemaining = this.state.gridWidth * this.state.gridHeight
-    for (var row = 0; row < this.state.gridHeight; row++) {
-      for (var col = 0; col < this.state.gridWidth; col++) {
-        var isMine = (Math.random() <= minesNeeded / spacesRemaining) && minesNeeded > 0
-        cells.push({x: col, y: row, isMine: isMine, isExplored: false, isFlagged: false, numAdjacent: null})
-        spacesRemaining -= 1
-        if (isMine) {
-          minesNeeded -= 1
-        }
-      }
-    }
-    return this.setState({cellData: this.setNumAdjacent(cells)})
-  }
-
-  setNumAdjacent(allCells) {
-    return allCells.map(cell => {
-      var numAdjacent = this.getAdjacentCells(cell, allCells).filter(adjCell => adjCell.isMine).length
-      cell.numAdjacent = numAdjacent ? numAdjacent: null
-      return cell
-    })
   }
 
   startTimer() {
@@ -114,14 +71,15 @@ class App extends Component {
   exploreCell(x, y) {
     const cellData = this.state.cellData
     const cellIndex = cellData.findIndex(cell => cell.x === x && cell.y === y)
-    if (cellData[cellIndex].isFlagged) {
+    const cell = cellData[cellIndex]
+    if (cell.isFlagged) {
       return
     }
-    cellData[cellIndex].isExplored = true
+    cell.isExplored = true
+    cellData[cellIndex] = cell
     this.setState({cellData : cellData})
-    const cell = cellData[cellIndex]
     if (!cell.numAdjacent && !cell.isMine) {
-      this.getAdjacentCells(cell, this.state.cellData).filter(adjCell => !adjCell.isExplored).forEach(adjCell =>
+      getAdjacentCells(cell, this.state.cellData).filter(adjCell => !adjCell.isExplored).forEach(adjCell =>
         this.exploreCell(adjCell.x, adjCell.y)
       )
     }
@@ -152,7 +110,7 @@ class App extends Component {
   resetGame() {
     clearInterval(this.state.timer);
     this.setState({gameState: null, timeElapsed: 0})
-    this.loadOptions(this.populateInitialCellData)
+    this.loadOptions(this.setInititialCellData)
   }
 
   render() {

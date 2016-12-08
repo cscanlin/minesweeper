@@ -10,7 +10,10 @@ class Header extends Component {
     return (
       <div className="header">
         <div className="counter">{this.leftpad(this.props.minesRemaining)}</div>
-        <div className="state" onClick={this.props.resetGame}>{this.props.gameState}</div>
+        <div className="state-container" onClick={this.props.resetGame}>
+          <div className={this.props.gameState + '-state state-indicator'}>
+          </div>
+        </div>
         <div className="counter">{this.leftpad(this.props.timeElapsed)}</div>
       </div>
     )
