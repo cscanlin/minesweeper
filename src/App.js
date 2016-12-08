@@ -27,6 +27,7 @@ class App extends Component {
       cellData: [],
       timer: null,
     }
+    this.clickCell = this.clickCell.bind(this)
     this.exploreCell = this.exploreCell.bind(this)
     this.flagCell = this.flagCell.bind(this)
     this.resetGame = this.resetGame.bind(this)
@@ -98,32 +99,34 @@ class App extends Component {
     this.setState({timeElapsed: this.state.timeElapsed + 1})
   }
 
-  // clickCell(x, y) {
-  //
-  // }
-
-  exploreCell(x, y) {
+  clickCell(x, y) {
     if (this.state.gameState !== 'playing') {
       this.startTimer()
     }
-    var cellData = this.state.cellData
-    var cellIndex = cellData.findIndex(cell => cell.x === x && cell.y === y)
+    var cell = this.exploreCell(x, y)
+    if (cell.isMine) {
+      this.gameLost()
+    } else if (this.state.cellData.filter(cell => cell.isExplored).length === this.numUnminedCells()) {
+      this.gameWon()
+    }
+  }
+
+  exploreCell(x, y) {
+    const cellData = this.state.cellData
+    const cellIndex = cellData.findIndex(cell => cell.x === x && cell.y === y)
     if (cellData[cellIndex].isFlagged) {
       return
     }
     cellData[cellIndex].isExplored = true
     this.setState({cellData : cellData})
-    var cell = cellData[cellIndex]
+    const cell = cellData[cellIndex]
     if (!cell.numAdjacent && !cell.isMine) {
       this.getAdjacentCells(cell, this.state.cellData).filter(adjCell => !adjCell.isExplored).forEach(adjCell =>
         this.exploreCell(adjCell.x, adjCell.y)
       )
     }
-    if (cell.isMine) {
-      this.gameLost()
-    } else if (cellData.filter(cell => cell.isExplored).length === this.numUnminedCells()) {
-      this.gameWon()
-    }
+    return cell
+
   }
 
   flagCell(x, y) {
@@ -171,7 +174,7 @@ class App extends Component {
           {rowsNums.map((row) =>
             <div key={row} className="row">
               {this.state.cellData.filter(cell => cell.y === row).sort((a, b) => a.x > b.x).map((cell, col) =>
-                <Cell key={(row, col)} {...cell} exploreCell={this.exploreCell} flagCell={this.flagCell}/>
+                <Cell key={(row, col)} {...cell} clickCell={this.clickCell} flagCell={this.flagCell}/>
               )}
             </div>
           )}

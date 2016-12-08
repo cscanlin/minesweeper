@@ -6,7 +6,7 @@ class Cell extends Component {
     if (e.shiftKey) {
       return this.props.flagCell(this.props.x, this.props.y)
     } else {
-      return this.props.exploreCell(this.props.x, this.props.y)
+      return this.props.clickCell(this.props.x, this.props.y)
     }
   }
 
@@ -45,7 +45,7 @@ Cell.propTypes = {
   isExplored: React.PropTypes.bool.isRequired,
   isFlagged: React.PropTypes.bool.isRequired,
   numAdjacent: React.PropTypes.number,
-  exploreCell: React.PropTypes.func.isRequired,
+  clickCell: React.PropTypes.func.isRequired,
   flagCell: React.PropTypes.func.isRequired,
 }
 
