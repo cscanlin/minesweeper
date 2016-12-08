@@ -1,3 +1,29 @@
+.app {
+  border: #7a7a7a;
+  border-width: 1px;
+  border-style: solid;
+  padding: 5px;
+}
+
+.header {
+  display: flex;
+  font-size: xx-large;
+  padding-bottom: 5px;
+}
+
+.counter {
+  background-color: #000;
+  color: #FF0000;
+  padding: 0px 5px;
+}
+.state {
+  margin: 0 auto;
+}
+
+.row {
+  display: flex;
+}
+
 .cell {
   width: 20px;
   height: 20px;
@@ -7,8 +33,4 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.row {
-  display: flex;
 }

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import Cell from './components/cell';
+import Header from './components/header';
+
+const CELLWIDTH = 22
 
 const adjacentDirections = {
   N: {x: 0, y:1},
@@ -16,16 +19,34 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      gameState: null,
+      timeElapsed: 0,
       gridWidth: 10,
       gridHeight: 10,
       numMines: 10,
       cellData: [],
+      timer: null,
     }
     this.exploreCell = this.exploreCell.bind(this)
+    this.flagCell = this.flagCell.bind(this)
+    this.restartGame = this.restartGame.bind(this)
+    this.updateTimer = this.updateTimer.bind(this)
   }
 
   componentDidMount() {
-    this.setState({cellData: this.populateInitialCellData()})
+    this.populateInitialCellData()
+  }
+
+  numUnminedCells() {
+    return (this.state.gridWidth * this.state.gridHeight) - this.state.numMines
+  }
+
+  getflaggedCells() {
+    return this.state.cellData.filter(cell => cell.isFlagged)
+  }
+
+  numUnflaggedRemaining() {
+    return this.state.numMines - this.getflaggedCells().length
   }
 
   getAdjacentCells(centerCell, allCells) {
@@ -45,17 +66,17 @@ class App extends Component {
     var cells = []
     var minesNeeded = this.state.numMines
     var spacesRemaining = this.state.gridWidth * this.state.gridHeight
-    for (var h = 0; h < this.state.gridHeight; h++) {
-      for (var w = 0; w < this.state.gridWidth; w++) {
+    for (var row = 0; row < this.state.gridHeight; row++) {
+      for (var col = 0; col < this.state.gridWidth; col++) {
         var isMine = (Math.random() <= minesNeeded / spacesRemaining) && minesNeeded > 0
-        cells.push({x: w, y: h, isMine: isMine, isExplored: false, isFlagged: false, numAdjacent: null})
+        cells.push({x: col, y: row, isMine: isMine, isExplored: false, isFlagged: false, numAdjacent: null})
+        spacesRemaining -= 1
         if (isMine) {
-          minesNeeded -=1
+          minesNeeded -= 1
         }
-        spacesRemaining -=1
       }
     }
-    return this.setNumAdjacent(cells)
+    return this.setState({cellData: this.setNumAdjacent(cells)})
   }
 
   setNumAdjacent(allCells) {
@@ -66,9 +87,22 @@ class App extends Component {
     })
   }
 
+  startTimer() {
+    this.setState({gameState: 'playing', timer: setInterval(this.updateTimer, 1000)})
+  }
+  updateTimer() {
+    this.setState({timeElapsed: this.state.timeElapsed + 1})
+  }
+
   exploreCell(x, y) {
+    if (this.state.cellData.filter(cell => cell.isExplored).length === 0) {
+      this.startTimer()
+    }
     var cellData = this.state.cellData
     var cellIndex = cellData.findIndex(cell => cell.x === x && cell.y === y)
+    if (cellData[cellIndex].isFlagged) {
+      return
+    }
     cellData[cellIndex].isExplored = true
     this.setState({cellData : cellData})
     var cell = cellData[cellIndex]
@@ -78,24 +112,63 @@ class App extends Component {
       )
     }
     if (cell.isMine) {
-      console.log('game over!');
+      this.gameLost()
+    } else if (cellData.filter(cell => cell.isExplored).length === this.numUnminedCells()) {
+      this.gameWon()
     }
+  }
+
+  flagCell(x, y) {
+    var cellData = this.state.cellData
+    var cellIndex = cellData.findIndex(cell => cell.x === x && cell.y === y)
+    cellData[cellIndex].isFlagged = true
+    this.setState({cellData : cellData})
+  }
+
+  gameLost() {
+      console.log('LOST');
+      clearInterval(this.state.timer);
+      this.state.cellData.forEach(cell =>
+        cell.isExplored = true
+      )
+      this.setState({gameState: 'lost', cellData: this.state.cellData})
+      console.log(this.state.gameState);
+  }
+
+  gameWon() {
+      console.log('WON');
+      clearInterval(this.state.timer);
+      this.setState({gameState: 'won'})
+      console.log(this.state.gameState);
+  }
+
+  restartGame() {
+    clearInterval(this.state.timer);
+    this.setState({timeElapsed: 0})
+    this.populateInitialCellData()
   }
 
   render() {
     const rowsNums = Array(this.state.gridHeight).fill().map((_, row) => row)
+    const viewportWidth = this.state.gridWidth * CELLWIDTH
     return (
-      <div className="App">
-        <div className="grid">
+      <div className='app' style={ {width: viewportWidth} }>
+        <Header
+          minesRemaining={this.numUnflaggedRemaining()}
+          gameState={this.state.gameState}
+          timeElapsed={this.state.timeElapsed}
+          restartGame={this.restartGame}
+        />
+      <div className="grid">
           {rowsNums.map((row) =>
             <div key={row} className="row">
               {this.state.cellData.filter(cell => cell.y === row).sort((a, b) => a.x > b.x).map((cell, col) =>
-                <Cell key={(row, col)} {...cell} exploreCell={this.exploreCell}/>
+                <Cell key={(row, col)} {...cell} exploreCell={this.exploreCell} flagCell={this.flagCell}/>
               )}
             </div>
           )}
         </div>
-      </div>
+    </div>
     );
   }
 }

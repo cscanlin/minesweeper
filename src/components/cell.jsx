@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 
 class Cell extends Component {
 
-  onClick() {
-    return this.props.exploreCell(this.props.x, this.props.y)
+  onClick(e) {
+    if (e.shiftKey) {
+      return this.props.flagCell(this.props.x, this.props.y)
+    } else {
+      return this.props.exploreCell(this.props.x, this.props.y)
+    }
   }
 
   cellText() {
@@ -13,8 +17,12 @@ class Cell extends Component {
   cellBackgroundColor() {
     if (this.props.isMine && this.props.isExplored) {
       return '#ff0000'
+    } else if (this.props.isFlagged) {
+      return  '#ffb2b2'
+    } else if (this.props.isExplored) {
+      return '#bfbfbf'
     } else {
-      return this.props.isExplored ? '#bfbfbf' : '#ededed'
+      return '#ededed'
     }
   }
 
@@ -23,7 +31,7 @@ class Cell extends Component {
       backgroundColor: this.cellBackgroundColor()
     }
     return (
-      <div className="cell" style={cellStyle} onClick={() => this.onClick()}>
+      <div className="cell" style={cellStyle} onClick={(e) => this.onClick(e)}>
         { this.props.isExplored ? <span className="cell-text">{this.cellText()}</span> : null }
       </div>
     );
@@ -35,8 +43,10 @@ Cell.propTypes = {
   y: React.PropTypes.number.isRequired,
   isMine: React.PropTypes.bool.isRequired,
   isExplored: React.PropTypes.bool.isRequired,
+  isFlagged: React.PropTypes.bool.isRequired,
   numAdjacent: React.PropTypes.number,
   exploreCell: React.PropTypes.func.isRequired,
+  flagCell: React.PropTypes.func.isRequired,
 }
 
 export default Cell;
