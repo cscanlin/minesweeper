@@ -77,11 +77,11 @@ class App extends Component {
     }
     cell.isExplored = true
     cellData[cellIndex] = cell
-    this.setState({cellData : cellData})
+    this.setState({cellData: cellData})
     if (!cell.numAdjacent && !cell.isMine) {
-      getAdjacentCells(cell, this.state.cellData).filter(adjCell => !adjCell.isExplored).forEach(adjCell =>
-        this.exploreCell(adjCell.x, adjCell.y)
-      )
+      getAdjacentCells(cell, this.state.cellData)
+        .filter(adjCell => !adjCell.isExplored)
+        .forEach(adjCell => this.exploreCell(adjCell.x, adjCell.y))
     }
     return cell
 
