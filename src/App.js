@@ -38,7 +38,7 @@ class App extends Component {
     this.resetGame()
   }
 
-  numUnminedCells() {
+  numSafeCells() {
     return (this.state.gridWidth * this.state.gridHeight) - this.state.numMines
   }
 
@@ -51,7 +51,7 @@ class App extends Component {
   }
 
   loadOptions(callback) {
-    this.setState({gridWidth: 10, gridHeight: 10, numMines: 40}, callback)
+    this.setState({gridWidth: 10, gridHeight: 10, numMines: 10}, callback)
   }
 
   getAdjacentCells(centerCell, allCells) {
@@ -106,7 +106,7 @@ class App extends Component {
     var cell = this.exploreCell(x, y)
     if (cell.isMine) {
       this.gameLost()
-    } else if (this.state.cellData.filter(cell => cell.isExplored).length === this.numUnminedCells()) {
+    } else if (this.state.cellData.filter(cell => cell.isExplored).length === this.numSafeCells()) {
       this.gameWon()
     }
   }
@@ -136,10 +136,6 @@ class App extends Component {
     this.setState({cellData : cellData})
   }
 
-  startGame() {
-    this.populateInitialCellData()
-  }
-
   gameLost() {
       clearInterval(this.state.timer);
       this.state.cellData.forEach(cell =>
@@ -161,9 +157,8 @@ class App extends Component {
 
   render() {
     const rowsNums = Array(this.state.gridHeight).fill().map((_, row) => row)
-    const viewportWidth = this.state.gridWidth * CELLWIDTH
     return (
-      <div className='app' style={ {width: viewportWidth} }>
+      <div className='app' style={ {width: this.state.gridWidth * CELLWIDTH} }>
         <Header
           minesRemaining={this.numUnflaggedRemaining()}
           gameState={this.state.gameState}
