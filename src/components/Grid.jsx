@@ -8,7 +8,7 @@ class Grid extends Component {
       <div className="grid">
         {rowsNums.map((row) =>
           <div key={row} className="row">
-            {this.props.cellData.filter(cell => cell.y === row).sort((a, b) => a.x > b.x).map((cell, col) =>
+            {this.props.cellData.filter(cell => cell.y === row).sort((a, b) => a.x - b.x).map((cell, col) =>
               <Cell key={(row, col)} {...cell} clickCell={this.props.clickCell} markCell={this.props.markCell}/>
             )}
           </div>
