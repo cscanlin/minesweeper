@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import Header from './components/Header'
-import Grid from './components/Grid'
-import Options from './components/Options'
-import {getCellIndexByCoordinates, getAdjacentCells, createGridCells} from './utils/cellUtils'
+import Header from './Header'
+import Grid from './Grid'
+import Options from './Options'
+import {getCellIndexByCoordinates, getAdjacentCells, createGridCells} from '../utils/cellUtils'
 
 const CELLWIDTH = 22
 
