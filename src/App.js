@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Header from './components/Header';
 import Grid from './components/Grid';
+import Options from './components/Options';
 import {getCellIndexByCoordinates, getAdjacentCells, createGridCells} from './utils/cellUtils';
 
 const CELLWIDTH = 22
@@ -11,9 +12,9 @@ class App extends Component {
     this.state = {
       gameState: null,
       timeElapsed: 0,
-      numMines: null,
-      gridWidth: null,
-      gridHeight: null,
+      numMines: 10,
+      gridWidth: 10,
+      gridHeight: 10,
       cellData: [],
       timer: null,
     }
@@ -26,6 +27,10 @@ class App extends Component {
 
   componentDidMount() {
     this.resetGame()
+  }
+
+  loadOptionFromEvent(e, callback) {
+    this.setState({[e.target.id]: parseInt(e.target.value)}, callback)
   }
 
   setInititialCellData() {
@@ -43,10 +48,6 @@ class App extends Component {
 
   numUnflaggedRemaining() {
     return this.state.numMines - this.getflaggedCells().length
-  }
-
-  loadOptions(callback) {
-    this.setState({gridWidth: 10, gridHeight: 10, numMines: 10}, callback)
   }
 
   startTimer() {
@@ -69,16 +70,17 @@ class App extends Component {
   }
 
   exploreCell(x, y) {
-    const cellIndex = getCellIndexByCoordinates(x, y, this.state.cellData)
-    const cell = this.state.cellData[cellIndex]
+    const cellData = this.state.cellData
+    const cellIndex = getCellIndexByCoordinates(x, y, cellData)
+    const cell = cellData[cellIndex]
     if (cell.isFlagged || cell.isQuestion) {
       return
     }
     cell.isExplored = true
-    this.state.cellData[cellIndex] = cell
-    this.setState({cellData: this.state.cellData})
+    cellData[cellIndex] = cell
+    this.setState({cellData: cellData})
     if (!cell.numAdjacent && !cell.isMine) {
-      getAdjacentCells(cell, this.state.cellData)
+      getAdjacentCells(cell, cellData)
         .filter(adjCell => !adjCell.isExplored)
         .forEach(adjCell => this.exploreCell(adjCell.x, adjCell.y))
     }
@@ -87,8 +89,9 @@ class App extends Component {
   }
 
   markCell(x, y) {
-    const cellIndex = getCellIndexByCoordinates(x, y, this.state.cellData)
-    const cell = this.state.cellData[cellIndex]
+    const cellData = this.state.cellData
+    const cellIndex = getCellIndexByCoordinates(x, y, cellData)
+    const cell = cellData[cellIndex]
     if (!cell.isFlagged && !cell.isQuestion) {
       cell.isFlagged = true
     } else if (cell.isFlagged){
@@ -97,8 +100,8 @@ class App extends Component {
     } else {
       cell.isQuestion = false
     }
-    this.state.cellData[cellIndex] = cell
-    this.setState({cellData : this.state.cellData})
+    cellData[cellIndex] = cell
+    this.setState({cellData : cellData})
   }
 
   gameLost() {
@@ -114,29 +117,40 @@ class App extends Component {
       this.setState({gameState: 'won'})
   }
 
-  resetGame() {
+  resetGame(e) {
     clearInterval(this.state.timer);
     this.setState({gameState: null, timeElapsed: 0})
-    this.loadOptions(this.setInititialCellData)
+    if (e && e.type === 'blur') {
+      this.loadOptionFromEvent(e, this.setInititialCellData)
+    } else {
+      this.setInititialCellData()
+    }
   }
 
   render() {
-
     return (
       <div className='app' style={ {width: this.state.gridWidth * CELLWIDTH} }>
-        <Header
-          minesRemaining={this.numUnflaggedRemaining()}
-          gameState={this.state.gameState}
-          timeElapsed={this.state.timeElapsed}
+        <div className='game-container border'>
+          <Header
+            minesRemaining={this.numUnflaggedRemaining()}
+            gameState={this.state.gameState}
+            timeElapsed={this.state.timeElapsed}
+            resetGame={this.resetGame}
+          />
+          <Grid
+            gridHeight={this.state.gridHeight}
+            cellData={this.state.cellData}
+            clickCell={this.clickCell}
+            markCell={this.markCell}
+          />
+        </div>
+        <Options
+          numMines={this.state.numMines}
+          gridWidth={this.state.gridWidth}
+          gridHeight={this.state.gridHeight}
           resetGame={this.resetGame}
         />
-        <Grid
-          gridHeight={this.state.gridHeight}
-          cellData={this.state.cellData}
-          clickCell={this.clickCell}
-          markCell={this.markCell}
-        />
-    </div>
+      </div>
     );
   }
 }

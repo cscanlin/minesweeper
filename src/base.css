@@ -1,7 +1,10 @@
-.app {
+.border {
   border: #7a7a7a;
   border-width: 1px;
   border-style: solid;
+}
+
+.game-container {
   padding: 5px;
 }
 
@@ -42,9 +45,6 @@
 .cell {
   width: 20px;
   height: 20px;
-  border: #7a7a7a;
-  border-width: 1px;
-  border-style: solid;
   display: flex;
   align-items: center;
   justify-content: center;

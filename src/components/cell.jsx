@@ -33,7 +33,7 @@ class Cell extends Component {
       backgroundColor: this.cellBackgroundColor()
     }
     return (
-      <div className="cell" style={cellStyle} onClick={(e) => this.onClick(e)}>
+      <div className="cell border" style={cellStyle} onClick={(e) => this.onClick(e)}>
         { this.props.isExplored ? <span className="cell-text">{this.cellText()}</span> : null }
       </div>
     );
