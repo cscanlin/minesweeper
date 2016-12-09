@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import OptionField from './OptionField';
+import React, { Component } from 'react'
+import OptionField from './OptionField'
 
 class Options extends Component {
 
@@ -30,4 +30,4 @@ Options.propTypes = {
   resetGame: React.PropTypes.func.isRequired,
 }
 
-export default Options;
+export default Options

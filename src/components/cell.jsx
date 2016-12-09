@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 class Cell extends Component {
 
@@ -27,16 +27,30 @@ class Cell extends Component {
       return '#ededed'
     }
   }
+  cellTextColor() {
+    const textColors = {
+      1: '#0004fc',
+      2: '#008000',
+      3: '#fc0000',
+      4: '#000280',
+      5: '#800101',
+      6: '#00807d',
+      7: '#000000',
+      8: '#808080',
+    }
+    return textColors[this.props.numAdjacent]
+  }
 
   render() {
     const cellStyle = {
-      backgroundColor: this.cellBackgroundColor()
+      backgroundColor: this.cellBackgroundColor(),
+      color: this.cellTextColor(),
     }
     return (
       <div className="cell border" style={cellStyle} onClick={(e) => this.onClick(e)}>
         { this.props.isExplored ? <span className="cell-text">{this.cellText()}</span> : null }
       </div>
-    );
+    )
   }
 }
 
@@ -52,4 +66,4 @@ Cell.propTypes = {
   markCell: React.PropTypes.func.isRequired,
 }
 
-export default Cell;
+export default Cell

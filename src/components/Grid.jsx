@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Cell from './Cell';
+import React, { Component } from 'react'
+import Cell from './Cell'
 
 class Grid extends Component {
   render() {
@@ -26,4 +26,4 @@ Grid.propTypes = {
   markCell: React.PropTypes.func.isRequired,
 }
 
-export default Grid;
+export default Grid

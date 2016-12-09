@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 class Header extends Component {
 
@@ -27,4 +27,4 @@ Header.propTypes = {
   resetGame: React.PropTypes.func.isRequired,
 }
 
-export default Header;
+export default Header

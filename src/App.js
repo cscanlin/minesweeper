@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import Header from './components/Header';
-import Grid from './components/Grid';
-import Options from './components/Options';
-import {getCellIndexByCoordinates, getAdjacentCells, createGridCells} from './utils/cellUtils';
+import React, { Component } from 'react'
+import Header from './components/Header'
+import Grid from './components/Grid'
+import Options from './components/Options'
+import {getCellIndexByCoordinates, getAdjacentCells, createGridCells} from './utils/cellUtils'
 
 const CELLWIDTH = 22
 
@@ -53,6 +53,7 @@ class App extends Component {
   startGame() {
     this.setState({gameState: 'playing', timer: setInterval(this.updateTimer, 1000)})
   }
+
   updateTimer() {
     if (this.state.gameState === 'playing') {
       this.setState({timeElapsed: this.state.timeElapsed + 1})
@@ -111,7 +112,7 @@ class App extends Component {
   }
 
   gameLost() {
-      clearInterval(this.state.timer);
+      clearInterval(this.state.timer)
       this.state.cellData.forEach(cell =>
         cell.isExplored = true
       )
@@ -119,12 +120,12 @@ class App extends Component {
   }
 
   gameWon() {
-      clearInterval(this.state.timer);
+      clearInterval(this.state.timer)
       this.setState({gameState: 'won'})
   }
 
   resetGame(e) {
-    clearInterval(this.state.timer);
+    clearInterval(this.state.timer)
     this.setState({gameState: null, timeElapsed: 0})
     if (e && e.type === 'blur') {
       this.loadOptionFromEvent(e, this.setInititialCellData)
@@ -157,8 +158,8 @@ class App extends Component {
           resetGame={this.resetGame}
         />
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
