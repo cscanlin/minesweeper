@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from './components/Header';
 import Grid from './components/Grid';
-import {getAdjacentCells, createGridCells} from './utils/cellUtils';
+import {getCellIndexByCoordinates, getAdjacentCells, createGridCells} from './utils/cellUtils';
 
 const CELLWIDTH = 22
 
@@ -19,7 +19,7 @@ class App extends Component {
     }
     this.clickCell = this.clickCell.bind(this)
     this.exploreCell = this.exploreCell.bind(this)
-    this.flagCell = this.flagCell.bind(this)
+    this.markCell = this.markCell.bind(this)
     this.resetGame = this.resetGame.bind(this)
     this.updateTimer = this.updateTimer.bind(this)
   }
@@ -69,15 +69,14 @@ class App extends Component {
   }
 
   exploreCell(x, y) {
-    const cellData = this.state.cellData
-    const cellIndex = cellData.findIndex(cell => cell.x === x && cell.y === y)
-    const cell = cellData[cellIndex]
-    if (cell.isFlagged) {
+    const cellIndex = getCellIndexByCoordinates(x, y, this.state.cellData)
+    const cell = this.state.cellData[cellIndex]
+    if (cell.isFlagged || cell.isQuestion) {
       return
     }
     cell.isExplored = true
-    cellData[cellIndex] = cell
-    this.setState({cellData: cellData})
+    this.state.cellData[cellIndex] = cell
+    this.setState({cellData: this.state.cellData})
     if (!cell.numAdjacent && !cell.isMine) {
       getAdjacentCells(cell, this.state.cellData)
         .filter(adjCell => !adjCell.isExplored)
@@ -87,11 +86,19 @@ class App extends Component {
 
   }
 
-  flagCell(x, y) {
-    var cellData = this.state.cellData
-    var cellIndex = cellData.findIndex(cell => cell.x === x && cell.y === y)
-    cellData[cellIndex].isFlagged = true
-    this.setState({cellData : cellData})
+  markCell(x, y) {
+    const cellIndex = getCellIndexByCoordinates(x, y, this.state.cellData)
+    const cell = this.state.cellData[cellIndex]
+    if (!cell.isFlagged && !cell.isQuestion) {
+      cell.isFlagged = true
+    } else if (cell.isFlagged){
+      cell.isFlagged = false
+      cell.isQuestion = true
+    } else {
+      cell.isQuestion = false
+    }
+    this.state.cellData[cellIndex] = cell
+    this.setState({cellData : this.state.cellData})
   }
 
   gameLost() {
@@ -127,7 +134,7 @@ class App extends Component {
           gridHeight={this.state.gridHeight}
           cellData={this.state.cellData}
           clickCell={this.clickCell}
-          flagCell={this.flagCell}
+          markCell={this.markCell}
         />
     </div>
     );

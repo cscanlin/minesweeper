@@ -9,6 +9,10 @@ const adjacentDirections = {
   NW: {x: -1, y:1},
 }
 
+export const getCellIndexByCoordinates = (x, y, allCells) => {
+  return allCells.findIndex(cell => cell.x === x && cell.y === y)
+}
+
 export const getAdjacentCells = (centerCell, allCells) => {
   var adjacentCells = []
   for (var direction in adjacentDirections) {
@@ -36,7 +40,15 @@ export const createGridCells = (minesNeeded, gridWidth, gridHeight) => {
   for (var row = 0; row < gridHeight; row++) {
     for (var col = 0; col < gridWidth; col++) {
       var isMine = (Math.random() <= minesNeeded / spacesRemaining) && minesNeeded > 0
-      cells.push({x: col, y: row, isMine: isMine, isExplored: false, isFlagged: false, numAdjacent: null})
+      cells.push({
+        x: col,
+        y: row,
+        isMine: isMine,
+        isExplored: false,
+        isFlagged: false,
+        isQuestion: false,
+        numAdjacent: null,
+      })
       spacesRemaining -= 1
       if (isMine) {
         minesNeeded -= 1

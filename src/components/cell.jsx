@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 class Cell extends Component {
 
   onClick(e) {
-    if (e.shiftKey) {
-      return this.props.flagCell(this.props.x, this.props.y)
+    if (e.shiftKey || e.ctrlKey || e.altKey) {
+      return this.props.markCell(this.props.x, this.props.y)
     } else {
       return this.props.clickCell(this.props.x, this.props.y)
     }
@@ -19,6 +19,8 @@ class Cell extends Component {
       return '#ff0000'
     } else if (this.props.isFlagged) {
       return  '#ffb2b2'
+    } else if (this.props.isQuestion) {
+      return  '#cc99ff'
     } else if (this.props.isExplored) {
       return '#bfbfbf'
     } else {
@@ -44,9 +46,10 @@ Cell.propTypes = {
   isMine: React.PropTypes.bool.isRequired,
   isExplored: React.PropTypes.bool.isRequired,
   isFlagged: React.PropTypes.bool.isRequired,
+  isQuestion: React.PropTypes.bool.isRequired,
   numAdjacent: React.PropTypes.number,
   clickCell: React.PropTypes.func.isRequired,
-  flagCell: React.PropTypes.func.isRequired,
+  markCell: React.PropTypes.func.isRequired,
 }
 
 export default Cell;

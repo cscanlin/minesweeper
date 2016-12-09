@@ -9,7 +9,7 @@ class Grid extends Component {
         {rowsNums.map((row) =>
           <div key={row} className="row">
             {this.props.cellData.filter(cell => cell.y === row).sort((a, b) => a.x > b.x).map((cell, col) =>
-              <Cell key={(row, col)} {...cell} clickCell={this.props.clickCell} flagCell={this.props.flagCell}/>
+              <Cell key={(row, col)} {...cell} clickCell={this.props.clickCell} markCell={this.props.markCell}/>
             )}
           </div>
         )}
@@ -23,7 +23,7 @@ Grid.propTypes = {
   gridHeight: React.PropTypes.number.isRequired,
   cellData: React.PropTypes.array,
   clickCell: React.PropTypes.func.isRequired,
-  flagCell: React.PropTypes.func.isRequired,
+  markCell: React.PropTypes.func.isRequired,
 }
 
 export default Grid;
