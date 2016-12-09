@@ -50,16 +50,21 @@ class App extends Component {
     return this.state.numMines - this.getflaggedCells().length
   }
 
-  startTimer() {
+  startGame() {
     this.setState({gameState: 'playing', timer: setInterval(this.updateTimer, 1000)})
   }
   updateTimer() {
-    this.setState({timeElapsed: this.state.timeElapsed + 1})
+    if (this.state.gameState === 'playing') {
+      this.setState({timeElapsed: this.state.timeElapsed + 1})
+    }
   }
 
   clickCell(x, y) {
-    if (this.state.gameState !== 'playing') {
-      this.startTimer()
+    if (this.state.gameState === 'won' || this.state.gameState === 'lost') {
+      return
+    }
+    else if (!this.state.gameState) {
+      this.startGame()
     }
     var cell = this.exploreCell(x, y)
     if (cell.isMine) {
@@ -72,6 +77,7 @@ class App extends Component {
   exploreCell(x, y) {
     const cellData = this.state.cellData
     const cellIndex = getCellIndexByCoordinates(x, y, cellData)
+    // const cellIndex = parseInt(y.toString() + x.toString()) // hacky shortcut
     const cell = cellData[cellIndex]
     if (cell.isFlagged || cell.isQuestion) {
       return
