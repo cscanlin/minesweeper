@@ -138,6 +138,9 @@ class App extends Component {
 
   gameWon() {
       clearInterval(this.state.timer)
+      this.state.cellData.forEach(cell =>
+        cell.isExplored = true
+      )
       this.setState({gameState: 'won'})
   }
 

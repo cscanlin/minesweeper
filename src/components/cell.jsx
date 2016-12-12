@@ -10,10 +10,6 @@ class Cell extends Component {
     }
   }
 
-  showCellText() {
-    return this.props.isExplored || this.props.gameState == 'won' || this.props.gameState == 'lost'
-  }
-
   cellText() {
     return this.props.isMine ? 'X' : this.props.numAdjacent
   }
@@ -52,7 +48,7 @@ class Cell extends Component {
     }
     return (
       <div className="cell border" style={cellStyle} onClick={(e) => this.onClick(e)}>
-        { this.showCellText() ? <span className="cell-text">{this.cellText()}</span> : null }
+        { this.props.isExplored ? <span className="cell-text">{this.cellText()}</span> : null }
       </div>
     )
   }
