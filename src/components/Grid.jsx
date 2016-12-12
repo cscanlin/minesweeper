@@ -19,6 +19,7 @@ class Grid extends Component {
                 showAllMines={this.props.showAllMines}
                 clickCell={this.props.clickCell}
                 markCell={this.props.markCell}
+                gameState={this.props.gameState}
                 {...cell}
               />
             )}
@@ -36,6 +37,7 @@ Grid.propTypes = {
   clickCell: React.PropTypes.func.isRequired,
   markCell: React.PropTypes.func.isRequired,
   showAllMines: React.PropTypes.bool.isRequired,
+  gameState: React.PropTypes.string,
 }
 
 export default Grid

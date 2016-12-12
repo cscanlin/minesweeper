@@ -169,6 +169,7 @@ class App extends Component {
             clickCell={this.clickCell}
             markCell={this.markCell}
             showAllMines={this.state.showAllMines}
+            gameState={this.state.gameState}
           />
         </div>
         <Options

@@ -15,10 +15,10 @@ class Cell extends Component {
   }
 
   cellBackgroundColor() {
-    if (this.props.isMine && (this.props.isExplored || this.props.showAllMines)) {
-      return '#ff0000'
-    } else if (this.props.isFlagged) {
+    if (this.props.isFlagged || (this.props.gameState === 'won' && this.props.isMine)) {
       return  '#ffb2b2'
+    } else if (this.props.isMine && (this.props.isExplored || this.props.showAllMines)) {
+      return '#ff0000'
     } else if (this.props.isQuestion) {
       return  '#cc99ff'
     } else if (this.props.isExplored) {
@@ -65,6 +65,7 @@ Cell.propTypes = {
   clickCell: React.PropTypes.func.isRequired,
   markCell: React.PropTypes.func.isRequired,
   showAllMines: React.PropTypes.bool.isRequired,
+  gameState: React.PropTypes.string,
 }
 
 export default Cell
