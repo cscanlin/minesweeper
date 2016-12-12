@@ -15,8 +15,8 @@
 }
 
 .counter {
-  background-color: #000;
-  color: #FF0000;
+  background-color: black;
+  color: red;
   padding: 0px 5px;
 }
 .state-container {
@@ -48,4 +48,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.option {
+  padding: 5px;
 }

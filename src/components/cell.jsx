@@ -10,12 +10,16 @@ class Cell extends Component {
     }
   }
 
+  showCellText() {
+    return this.props.isExplored || this.props.gameState == 'won' || this.props.gameState == 'lost'
+  }
+
   cellText() {
     return this.props.isMine ? 'X' : this.props.numAdjacent
   }
 
   cellBackgroundColor() {
-    if (this.props.isMine && this.props.isExplored) {
+    if (this.props.isMine && (this.props.isExplored || this.props.showAllMines)) {
       return '#ff0000'
     } else if (this.props.isFlagged) {
       return  '#ffb2b2'
@@ -44,11 +48,11 @@ class Cell extends Component {
   render() {
     const cellStyle = {
       backgroundColor: this.cellBackgroundColor(),
-      color: this.cellTextColor(),
+      color: this.props.isMine ? '#000000' : this.cellTextColor(),
     }
     return (
       <div className="cell border" style={cellStyle} onClick={(e) => this.onClick(e)}>
-        { this.props.isExplored ? <span className="cell-text">{this.cellText()}</span> : null }
+        { this.showCellText() ? <span className="cell-text">{this.cellText()}</span> : null }
       </div>
     )
   }
@@ -64,6 +68,7 @@ Cell.propTypes = {
   numAdjacent: React.PropTypes.number,
   clickCell: React.PropTypes.func.isRequired,
   markCell: React.PropTypes.func.isRequired,
+  showAllMines: React.PropTypes.bool.isRequired,
 }
 
 export default Cell

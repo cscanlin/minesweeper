@@ -57,3 +57,17 @@ export const createGridCells = (minesNeeded, gridWidth, gridHeight) => {
   }
   return setNumAdjacent(cells)
 }
+
+export const validateGame = (allCells, numMines) => {
+  var correctCells = 0
+  var exploredCells = 0
+  allCells.forEach(cell => {
+    exploredCells += cell.isExplored ? 1 : 0
+    if (cell.isMine && !cell.isFlagged && !cell.isQuestion) {
+      return false
+    } else if (cell.isMine && cell.isFlagged) {
+      correctCells += 1
+    }
+  })
+  return correctCells === numMines || exploredCells === allCells.length - numMines
+}

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Header from './Header'
 import Grid from './Grid'
 import Options from './Options'
-import {getCellIndexByCoordinates, getAdjacentCells, createGridCells} from '../utils/cellUtils'
+import {getCellIndexByCoordinates, getAdjacentCells, createGridCells, validateGame} from '../utils/cellUtils'
 
 const CELLWIDTH = 22
 
@@ -13,16 +13,19 @@ class App extends Component {
       gameState: null,
       timeElapsed: 0,
       numMines: 10,
-      gridWidth: 10,
-      gridHeight: 10,
+      gridWidth: 8,
+      gridHeight: 8,
       cellData: [],
       timer: null,
+      showAllMines: false,
     }
     this.clickCell = this.clickCell.bind(this)
     this.exploreCell = this.exploreCell.bind(this)
     this.markCell = this.markCell.bind(this)
     this.resetGame = this.resetGame.bind(this)
+    this.onClickStateContainer = this.onClickStateContainer.bind(this)
     this.updateTimer = this.updateTimer.bind(this)
+    this.toggleCheat = this.toggleCheat.bind(this)
   }
 
   componentDidMount() {
@@ -54,6 +57,10 @@ class App extends Component {
     this.setState({gameState: 'playing', timer: setInterval(this.updateTimer, 1000)})
   }
 
+  toggleCheat() {
+    this.setState({showAllMines: !this.state.showAllMines})
+  }
+
   updateTimer() {
     if (this.state.gameState === 'playing') {
       this.setState({timeElapsed: this.state.timeElapsed + 1})
@@ -70,7 +77,7 @@ class App extends Component {
     var cell = this.exploreCell(x, y)
     if (cell.isMine) {
       this.gameLost()
-    } else if (this.state.cellData.filter(cell => cell.isExplored).length === this.numSafeCells()) {
+    } else if (validateGame(this.state.cellData, this.state.numMines)) {
       this.gameWon()
     }
   }
@@ -99,7 +106,9 @@ class App extends Component {
     const cellData = this.state.cellData
     const cellIndex = getCellIndexByCoordinates(x, y, cellData)
     const cell = cellData[cellIndex]
-    if (!cell.isFlagged && !cell.isQuestion) {
+    if (cell.isExplored) {
+      return
+    }else if (!cell.isFlagged && !cell.isQuestion) {
       cell.isFlagged = true
     } else if (cell.isFlagged){
       cell.isFlagged = false
@@ -109,6 +118,14 @@ class App extends Component {
     }
     cellData[cellIndex] = cell
     this.setState({cellData : cellData})
+  }
+
+  onClickStateContainer() {
+    if (this.state.gameState === 'playing') {
+      return validateGame(this.state.cellData, this.state.numMines) ? this.gameWon() : this.gameLost()
+    } else {
+      return this.resetGame()
+    }
   }
 
   gameLost() {
@@ -142,20 +159,23 @@ class App extends Component {
             minesRemaining={this.numUnflaggedRemaining()}
             gameState={this.state.gameState}
             timeElapsed={this.state.timeElapsed}
-            resetGame={this.resetGame}
+            onClickStateContainer={this.onClickStateContainer}
           />
           <Grid
             gridHeight={this.state.gridHeight}
             cellData={this.state.cellData}
             clickCell={this.clickCell}
             markCell={this.markCell}
+            showAllMines={this.state.showAllMines}
           />
         </div>
         <Options
           numMines={this.state.numMines}
           gridWidth={this.state.gridWidth}
           gridHeight={this.state.gridHeight}
+          showAllMines={this.state.showAllMines}
           resetGame={this.resetGame}
+          toggleCheat={this.toggleCheat}
         />
       </div>
     )
