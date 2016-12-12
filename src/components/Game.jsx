@@ -85,7 +85,6 @@ class App extends Component {
   exploreCell(x, y) {
     const cellData = this.state.cellData
     const cellIndex = getCellIndexByCoordinates(x, y, cellData)
-    // const cellIndex = parseInt(y.toString() + x.toString()) // hacky shortcut
     const cell = cellData[cellIndex]
     if (cell.isFlagged || cell.isQuestion) {
       return

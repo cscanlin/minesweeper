@@ -9,16 +9,24 @@ const adjacentDirections = {
   NW: {x: -1, y:1},
 }
 
-export const getCellIndexByCoordinates = (x, y, allCells) => {
+export const getCellIndexByCoordinates = (x, y, allCells, numRows) => {
   return allCells.findIndex(cell => cell.x === x && cell.y === y)
 }
 
-export const getAdjacentCells = (centerCell, allCells) => {
+const getCellIndexByCoordinatesFast = (x, y, allCells, numRows) => {
+  return (numRows * y) + (x)
+}
+
+export const getAdjacentCells = (centerCell, allCells, numRows, findFunc=getCellIndexByCoordinates) => {
   var adjacentCells = []
   for (var direction in adjacentDirections) {
-    var xDiff = adjacentDirections[direction].x
-    var yDiff = adjacentDirections[direction].y
-    var adjCell = allCells.find(adjCell => adjCell.x === centerCell.x + xDiff && adjCell.y === centerCell.y + yDiff)
+    var cellIndex = findFunc(
+      centerCell.x + adjacentDirections[direction].x,
+      centerCell.y + adjacentDirections[direction].y,
+      allCells,
+      numRows,
+    )
+    var adjCell = allCells[cellIndex]
     if (adjCell) {
       adjacentCells.push(adjCell)
     }
@@ -26,9 +34,11 @@ export const getAdjacentCells = (centerCell, allCells) => {
   return adjacentCells
 }
 
-const setNumAdjacent = (allCells) => {
+const setNumAdjacent = (allCells, numRows) => {
   return allCells.map(cell => {
-    var numAdjacent = getAdjacentCells(cell, allCells).filter(adjCell => adjCell.isMine).length
+    var numAdjacent = getAdjacentCells(
+      cell, allCells, numRows, getCellIndexByCoordinatesFast
+    ).filter(adjCell => adjCell.isMine).length
     cell.numAdjacent = numAdjacent ? numAdjacent: null
     return cell
   })
@@ -55,7 +65,7 @@ export const createGridCells = (minesNeeded, gridWidth, gridHeight) => {
       }
     }
   }
-  return setNumAdjacent(cells)
+  return setNumAdjacent(cells, gridHeight)
 }
 
 export const validateGame = (allCells, numMines) => {
