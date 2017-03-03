@@ -1,3 +1,7 @@
+.app {
+  margin: 10px;
+}
+
 .border {
   border: #7a7a7a;
   border-width: 1px;
