@@ -1,5 +1,7 @@
 Minesweeper built with React, initialized with https://github.com/facebookincubator/create-react-app
 
+See it live at: https://cscanlin.github.io/minesweeper/
+
 # To Run
 
 ```
