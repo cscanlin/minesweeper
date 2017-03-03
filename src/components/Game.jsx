@@ -6,7 +6,7 @@ import {getCellIndexByCoordinates, getAdjacentCells, createGridCells, validateGa
 
 const CELLWIDTH = 22
 
-class App extends Component {
+class Game extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -111,7 +111,9 @@ class App extends Component {
       cell.isFlagged = true
     } else if (cell.isFlagged){
       cell.isFlagged = false
-      cell.isQuestion = true
+      if (this.props.allowQuestion) {
+        cell.isQuestion = true
+      }
     } else {
       cell.isQuestion = false
     }
@@ -185,4 +187,13 @@ class App extends Component {
   }
 }
 
-export default App
+Game.defaultProps = {
+  allowQuestion: true,
+}
+
+Game.propTypes = {
+  allowQuestion: React.PropTypes.bool.isRequired,
+}
+
+
+export default Game
