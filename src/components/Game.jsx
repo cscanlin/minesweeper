@@ -93,7 +93,7 @@ class Game extends Component {
     cellData[cellIndex] = cell
     this.setState({cellData: cellData})
     if (!cell.numAdjacent && !cell.isMine) {
-      getAdjacentCells(cell, cellData, this.state.gridHeight, getCellIndexByCoordinates)
+      getAdjacentCells(cell, cellData)
         .filter(adjCell => !adjCell.isExplored)
         .forEach(adjCell => this.exploreCell(adjCell.x, adjCell.y))
     }
@@ -107,7 +107,7 @@ class Game extends Component {
     const cell = cellData[cellIndex]
     if (cell.isExplored) {
       return
-    }else if (!cell.isFlagged && !cell.isQuestion) {
+    } else if (!cell.isFlagged && !cell.isQuestion) {
       cell.isFlagged = true
     } else if (cell.isFlagged){
       cell.isFlagged = false

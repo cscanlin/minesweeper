@@ -9,24 +9,19 @@ const adjacentDirections = {
   NW: {x: -1, y:1},
 }
 
-export const getCellIndexByCoordinates = (x, y, allCells, numRows) => {
+export const getCellIndexByCoordinates = (x, y, allCells) => {
   return allCells.findIndex(cell => cell.x === x && cell.y === y)
 }
 
-const getCellIndexByCoordinatesFast = (x, y, allCells, numRows) => {
-  const numColumns = allCells.length / numRows
-  if (x >= 0 && x < numColumns && y >= 0 && y < numRows) {
-    return (numRows * y) + (x)
-  }
-}
-
-export const getAdjacentCells = (centerCell, allCells, numRows, findFunc=getCellIndexByCoordinates) => {
+export const getAdjacentCells = (centerCell, allCells) => {
   var adjacentCells = []
   for (var direction in adjacentDirections) {
-    const neighborX = centerCell.x + adjacentDirections[direction].x
-    const neighborY = centerCell.y + adjacentDirections[direction].y
-    const cellIndex = findFunc(neighborX, neighborY, allCells, numRows)
-    if (cellIndex && cellIndex !== -1) {
+    const cellIndex = getCellIndexByCoordinates(
+      centerCell.x + adjacentDirections[direction].x,
+      centerCell.y + adjacentDirections[direction].y,
+      allCells
+    )
+    if (cellIndex > -1) {
       adjacentCells.push(allCells[cellIndex])
     }
   }
@@ -35,9 +30,7 @@ export const getAdjacentCells = (centerCell, allCells, numRows, findFunc=getCell
 
 const setNumAdjacent = (allCells, numRows) => {
   return allCells.map(cell => {
-    const numAdjacent = getAdjacentCells(
-      cell, allCells, numRows, getCellIndexByCoordinatesFast
-    ).filter(adjCell => adjCell.isMine).length
+    const numAdjacent = getAdjacentCells(cell, allCells).filter(adjCell => adjCell.isMine).length
     cell.numAdjacent = numAdjacent ? numAdjacent: null
     return cell
   })
