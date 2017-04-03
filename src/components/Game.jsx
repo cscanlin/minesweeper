@@ -164,6 +164,7 @@ class Game extends Component {
             gameState={this.state.gameState}
             timeElapsed={this.state.timeElapsed}
             onClickStateContainer={this.onClickStateContainer}
+            gridWidth={this.state.gridWidth}
           />
           <Grid
             gridHeight={this.state.gridHeight}
