@@ -26,18 +26,27 @@ class Options extends Component {
           fieldValue={this.props.showAllMines}
           onChange={this.props.toggleCheat}
         />
+        <OptionField
+          key='showMineOdds'
+          fieldName='showMineOdds'
+          inputType='checkbox'
+          fieldValue={this.props.showMineOdds}
+          onChange={this.props.toggleOdds}
+        />
       </form>
     )
   }
 }
 
 Options.propTypes = {
+  resetGame: React.PropTypes.func.isRequired,
   numMines: React.PropTypes.number.isRequired,
   gridWidth: React.PropTypes.number.isRequired,
   gridHeight: React.PropTypes.number.isRequired,
   showAllMines: React.PropTypes.bool.isRequired,
-  resetGame: React.PropTypes.func.isRequired,
   toggleCheat: React.PropTypes.func.isRequired,
+  showMineOdds: React.PropTypes.bool.isRequired,
+  toggleOdds: React.PropTypes.func.isRequired,
 }
 
 export default Options

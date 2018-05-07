@@ -11,7 +11,11 @@ class Cell extends Component {
   }
 
   cellText() {
-    return this.props.isMine ? 'X' : this.props.numAdjacent
+    if (this.props.isExplored) {
+      return <span className="cell-text">{this.props.isMine ? 'X' : this.props.numAdjacent}</span>
+    } else if (this.props.showMineOdds) {
+      return <span className="cell-text" style={{fontSize: 'small'}}>{this.props.mineOdds}</span>
+    }
   }
 
   cellBackgroundColor() {
@@ -48,11 +52,12 @@ class Cell extends Component {
     }
     return (
       <div className="cell border" style={cellStyle} onClick={(e) => this.onClick(e)}>
-        { this.props.isExplored ? <span className="cell-text">{this.cellText()}</span> : null }
+        {this.cellText()}
       </div>
     )
   }
 }
+//
 
 Cell.propTypes = {
   x: React.PropTypes.number.isRequired,
@@ -65,6 +70,8 @@ Cell.propTypes = {
   clickCell: React.PropTypes.func.isRequired,
   markCell: React.PropTypes.func.isRequired,
   showAllMines: React.PropTypes.bool.isRequired,
+  showMineOdds: React.PropTypes.bool.isRequired,
+  mineOdds: React.PropTypes.number,
   gameState: React.PropTypes.string,
 }
 

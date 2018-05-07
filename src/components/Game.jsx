@@ -2,7 +2,14 @@ import React, { Component } from 'react'
 import Header from './Header'
 import Grid from './Grid'
 import Options from './Options'
-import {getCellIndexByCoordinates, getAdjacentCells, createGridCells, validateGame} from '../utils/cellUtils'
+
+import {
+  getCellIndexByCoordinates,
+  getAdjacentCells,
+  createGridCells,
+  validateGame,
+  getMineOdds,
+} from '../utils/cellUtils'
 
 const CELLWIDTH = 22
 
@@ -18,6 +25,7 @@ class Game extends Component {
       cellData: [],
       timer: null,
       showAllMines: false,
+      showMineOdds: false,
     }
     this.clickCell = this.clickCell.bind(this)
     this.exploreCell = this.exploreCell.bind(this)
@@ -26,6 +34,7 @@ class Game extends Component {
     this.onClickStateContainer = this.onClickStateContainer.bind(this)
     this.updateTimer = this.updateTimer.bind(this)
     this.toggleCheat = this.toggleCheat.bind(this)
+    this.toggleOdds = this.toggleOdds.bind(this)
   }
 
   componentDidMount() {
@@ -61,6 +70,10 @@ class Game extends Component {
     this.setState({showAllMines: !this.state.showAllMines})
   }
 
+  toggleOdds() {
+    this.setState({showMineOdds: !this.state.showMineOdds})
+  }
+
   updateTimer() {
     if (this.state.gameState === 'playing') {
       this.setState({timeElapsed: this.state.timeElapsed + 1})
@@ -76,10 +89,11 @@ class Game extends Component {
     }
     var cell = this.exploreCell(x, y)
     if (cell.isMine) {
-      this.gameLost()
+      return this.gameLost()
     } else if (validateGame(this.state.cellData, this.state.numMines)) {
-      this.gameWon()
+      return this.gameWon()
     }
+    this.setState({allCells: getMineOdds(this.state.cellData)})
   }
 
   exploreCell(x, y) {
@@ -172,16 +186,19 @@ class Game extends Component {
             clickCell={this.clickCell}
             markCell={this.markCell}
             showAllMines={this.state.showAllMines}
+            showMineOdds={this.state.showMineOdds}
             gameState={this.state.gameState}
           />
         </div>
         <Options
+          resetGame={this.resetGame}
           numMines={this.state.numMines}
           gridWidth={this.state.gridWidth}
           gridHeight={this.state.gridHeight}
           showAllMines={this.state.showAllMines}
-          resetGame={this.resetGame}
           toggleCheat={this.toggleCheat}
+          showMineOdds={this.state.showMineOdds}
+          toggleOdds={this.toggleOdds}
         />
       </div>
     )

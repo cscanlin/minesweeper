@@ -39,10 +39,12 @@ const setNumAdjacent = (allCells, numRows) => {
 export const createGridCells = (minesNeeded, gridWidth, gridHeight) => {
   var cells = []
   var spacesRemaining = gridWidth * gridHeight
+  let index = 0
   for (var row = 0; row < gridHeight; row++) {
     for (var col = 0; col < gridWidth; col++) {
       var isMine = (Math.random() <= minesNeeded / spacesRemaining) && minesNeeded > 0
       cells.push({
+        index,
         x: col,
         y: row,
         isMine: isMine,
@@ -50,11 +52,13 @@ export const createGridCells = (minesNeeded, gridWidth, gridHeight) => {
         isFlagged: false,
         isQuestion: false,
         numAdjacent: null,
+        mineOdds: null,
       })
       spacesRemaining -= 1
       if (isMine) {
         minesNeeded -= 1
       }
+      index += 1
     }
   }
   return setNumAdjacent(cells, gridHeight)
@@ -72,4 +76,19 @@ export const validateGame = (allCells, numMines) => {
     }
   })
   return correctCells === numMines || exploredCells === allCells.length - numMines
+}
+
+export const getMineOdds = allCells => {
+  allCells.forEach(cell => {
+    if (!cell.isExplored || !cell.numAdjacent) {
+      return
+    }
+    const unexploredAdjacent = getAdjacentCells(cell, allCells).filter(adj => !adj.isExplored)
+    const mineOdds = Math.round(cell.numAdjacent / unexploredAdjacent.length * 100)
+    unexploredAdjacent.forEach(adj => {
+      allCells[adj.index].mineOdds = Math.max(adj.mineOdds, mineOdds)
+      // console.log(allCells[adj.index].mineOdds);
+    })
+  })
+  return allCells
 }

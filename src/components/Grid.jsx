@@ -17,6 +17,7 @@ class Grid extends Component {
               <Cell
                 key={(row, col)}
                 showAllMines={this.props.showAllMines}
+                showMineOdds={this.props.showMineOdds}
                 clickCell={this.props.clickCell}
                 markCell={this.props.markCell}
                 gameState={this.props.gameState}
@@ -37,6 +38,7 @@ Grid.propTypes = {
   clickCell: React.PropTypes.func.isRequired,
   markCell: React.PropTypes.func.isRequired,
   showAllMines: React.PropTypes.bool.isRequired,
+  showMineOdds: React.PropTypes.bool.isRequired,
   gameState: React.PropTypes.string,
 }
 
