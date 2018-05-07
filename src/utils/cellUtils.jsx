@@ -79,15 +79,18 @@ export const validateGame = (allCells, numMines) => {
 }
 
 export const getMineOdds = allCells => {
-  allCells.forEach(cell => {
-    if (!cell.isExplored || !cell.numAdjacent) {
-      return
-    }
-    const unexploredAdjacent = getAdjacentCells(cell, allCells).filter(adj => !adj.isExplored)
-    const mineOdds = Math.round(cell.numAdjacent / unexploredAdjacent.length * 100)
-    unexploredAdjacent.forEach(adj => {
-      allCells[adj.index].mineOdds = Math.max(adj.mineOdds, mineOdds)
-      // console.log(allCells[adj.index].mineOdds);
+  Array(5).fill().forEach(() => {
+    allCells.forEach(cell => {
+      if (!cell.isExplored || !cell.numAdjacent) {
+        return
+      }
+      const unexploredAdjacent = getAdjacentCells(cell, allCells).filter(adj => !adj.isExplored)
+      const possibleMines = unexploredAdjacent.filter(adj => adj.mineOdds < 100)
+      const numKnownMines = unexploredAdjacent.length - possibleMines.length
+      const mineOdds = Math.round(((cell.numAdjacent - numKnownMines) / possibleMines.length) * 100)
+      possibleMines.forEach(adj => {
+        allCells[adj.index].mineOdds = [0, 100, null].includes(mineOdds) ? mineOdds : adj.mineOdds
+      })
     })
   })
   return allCells

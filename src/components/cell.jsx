@@ -14,7 +14,7 @@ class Cell extends Component {
     if (this.props.isExplored) {
       return <span className="cell-text">{this.props.isMine ? 'X' : this.props.numAdjacent}</span>
     } else if (this.props.showMineOdds) {
-      return <span className="cell-text" style={{fontSize: 'small'}}>{this.props.mineOdds}</span>
+      return <span className="cell-text" style={{fontSize: 'x-small'}}>{this.props.mineOdds}</span>
     }
   }
 
