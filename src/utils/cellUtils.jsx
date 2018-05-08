@@ -28,7 +28,7 @@ export const getAdjacentCells = (centerCell, allCells) => {
   return adjacentCells
 }
 
-const setNumAdjacent = (allCells, numRows) => {
+const setNumAdjacent = (allCells) => {
   return allCells.map(cell => {
     const numAdjacent = getAdjacentCells(cell, allCells).filter(adjCell => adjCell.isMine).length
     cell.numAdjacent = numAdjacent ? numAdjacent: null
@@ -61,7 +61,7 @@ export const createGridCells = (minesNeeded, gridWidth, gridHeight) => {
       index += 1
     }
   }
-  return setNumAdjacent(cells, gridHeight)
+  return setNumAdjacent(cells)
 }
 
 export const validateGame = (allCells, numMines) => {

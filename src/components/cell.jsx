@@ -32,6 +32,9 @@ class Cell extends Component {
     }
   }
   cellTextColor() {
+    if (this.props.showMineOdds && !this.props.isExplored) {
+      return '#000000'
+    }
     const textColors = {
       1: '#0004fc',
       2: '#008000',

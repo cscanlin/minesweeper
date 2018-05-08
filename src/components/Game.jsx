@@ -26,6 +26,7 @@ class Game extends Component {
       timer: null,
       showAllMines: false,
       showMineOdds: false,
+      firstTurn: true,
     }
     this.clickCell = this.clickCell.bind(this)
     this.exploreCell = this.exploreCell.bind(this)
@@ -45,9 +46,9 @@ class Game extends Component {
     this.setState({[e.target.id]: parseInt(e.target.value)}, callback)
   }
 
-  setInititialCellData() {
+  setInititialCellData(callback = null) {
     const cellData = createGridCells(this.state.numMines, this.state.gridWidth, this.state.gridHeight)
-    this.setState({cellData: cellData})
+    this.setState({cellData: cellData, firstTurn: true}, callback)
   }
 
   numSafeCells() {
@@ -63,7 +64,11 @@ class Game extends Component {
   }
 
   startGame() {
-    this.setState({gameState: 'playing', timer: setInterval(this.updateTimer, 1000)})
+    this.setState({
+      gameState: 'playing',
+      timer: setInterval(this.updateTimer, 1000),
+      firstTurn: true,
+    })
   }
 
   toggleCheat() {
@@ -89,11 +94,15 @@ class Game extends Component {
     }
     var cell = this.exploreCell(x, y)
     if (cell.isMine) {
+      if (this.state.firstTurn) {
+        this.setInititialCellData(() => this.clickCell(x, y))
+        return
+      }
       return this.gameLost()
     } else if (validateGame(this.state.cellData, this.state.numMines)) {
       return this.gameWon()
     }
-    this.setState({allCells: getMineOdds(this.state.cellData)})
+    this.setState({allCells: getMineOdds(this.state.cellData), firstTurn: false})
   }
 
   exploreCell(x, y) {
