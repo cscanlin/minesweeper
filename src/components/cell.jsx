@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 class Cell extends Component {
 
@@ -63,19 +64,19 @@ class Cell extends Component {
 //
 
 Cell.propTypes = {
-  x: React.PropTypes.number.isRequired,
-  y: React.PropTypes.number.isRequired,
-  isMine: React.PropTypes.bool.isRequired,
-  isExplored: React.PropTypes.bool.isRequired,
-  isFlagged: React.PropTypes.bool.isRequired,
-  isQuestion: React.PropTypes.bool.isRequired,
-  numAdjacent: React.PropTypes.number,
-  clickCell: React.PropTypes.func.isRequired,
-  markCell: React.PropTypes.func.isRequired,
-  showAllMines: React.PropTypes.bool.isRequired,
-  showMineOdds: React.PropTypes.bool.isRequired,
-  mineOdds: React.PropTypes.number,
-  gameState: React.PropTypes.string,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  isMine: PropTypes.bool.isRequired,
+  isExplored: PropTypes.bool.isRequired,
+  isFlagged: PropTypes.bool.isRequired,
+  isQuestion: PropTypes.bool.isRequired,
+  numAdjacent: PropTypes.number,
+  clickCell: PropTypes.func.isRequired,
+  markCell: PropTypes.func.isRequired,
+  showAllMines: PropTypes.bool.isRequired,
+  showMineOdds: PropTypes.bool.isRequired,
+  mineOdds: PropTypes.number,
+  gameState: PropTypes.string,
 }
 
 export default Cell

@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+
 import Cell from './Cell'
 
 class Grid extends Component {
@@ -33,13 +35,13 @@ class Grid extends Component {
 
 
 Grid.propTypes = {
-  gridHeight: React.PropTypes.number.isRequired,
-  cellData: React.PropTypes.array,
-  clickCell: React.PropTypes.func.isRequired,
-  markCell: React.PropTypes.func.isRequired,
-  showAllMines: React.PropTypes.bool.isRequired,
-  showMineOdds: React.PropTypes.bool.isRequired,
-  gameState: React.PropTypes.string,
+  gridHeight: PropTypes.number.isRequired,
+  cellData: PropTypes.array,
+  clickCell: PropTypes.func.isRequired,
+  markCell: PropTypes.func.isRequired,
+  showAllMines: PropTypes.bool.isRequired,
+  showMineOdds: PropTypes.bool.isRequired,
+  gameState: PropTypes.string,
 }
 
 export default Grid

@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+
 import Header from './Header'
 import Grid from './Grid'
 import Options from './Options'
@@ -219,7 +221,7 @@ Game.defaultProps = {
 }
 
 Game.propTypes = {
-  allowQuestion: React.PropTypes.bool.isRequired,
+  allowQuestion: PropTypes.bool.isRequired,
 }
 
 

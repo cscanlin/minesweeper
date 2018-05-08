@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+
 import OptionField from './OptionField'
 
 class Options extends Component {
@@ -39,14 +41,14 @@ class Options extends Component {
 }
 
 Options.propTypes = {
-  resetGame: React.PropTypes.func.isRequired,
-  numMines: React.PropTypes.number.isRequired,
-  gridWidth: React.PropTypes.number.isRequired,
-  gridHeight: React.PropTypes.number.isRequired,
-  showAllMines: React.PropTypes.bool.isRequired,
-  toggleCheat: React.PropTypes.func.isRequired,
-  showMineOdds: React.PropTypes.bool.isRequired,
-  toggleOdds: React.PropTypes.func.isRequired,
+  resetGame: PropTypes.func.isRequired,
+  numMines: PropTypes.number.isRequired,
+  gridWidth: PropTypes.number.isRequired,
+  gridHeight: PropTypes.number.isRequired,
+  showAllMines: PropTypes.bool.isRequired,
+  toggleCheat: PropTypes.func.isRequired,
+  showMineOdds: PropTypes.bool.isRequired,
+  toggleOdds: PropTypes.func.isRequired,
 }
 
 export default Options

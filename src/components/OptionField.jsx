@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 class OptionField extends Component {
 
@@ -20,14 +21,14 @@ class OptionField extends Component {
 }
 
 OptionField.propTypes = {
-  fieldName: React.PropTypes.string.isRequired,
-  fieldValue: React.PropTypes.oneOfType([
-    React.PropTypes.number,
-    React.PropTypes.bool,
+  fieldName: PropTypes.string.isRequired,
+  fieldValue: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.bool,
   ]).isRequired,
-  inputType: React.PropTypes.string.isRequired,
-  onBlur: React.PropTypes.func,
-  onChange: React.PropTypes.func,
+  inputType: PropTypes.string.isRequired,
+  onBlur: PropTypes.func,
+  onChange: PropTypes.func,
 }
 
 export default OptionField

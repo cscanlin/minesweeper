@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 class Header extends Component {
 
@@ -26,11 +27,11 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-  minesRemaining: React.PropTypes.number.isRequired,
-  gameState: React.PropTypes.string,
-  timeElapsed: React.PropTypes.number.isRequired,
-  onClickStateContainer: React.PropTypes.func.isRequired,
-  gridWidth: React.PropTypes.number.isRequired,
+  minesRemaining: PropTypes.number.isRequired,
+  gameState: PropTypes.string,
+  timeElapsed: PropTypes.number.isRequired,
+  onClickStateContainer: PropTypes.func.isRequired,
+  gridWidth: PropTypes.number.isRequired,
 }
 
 export default Header
