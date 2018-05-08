@@ -1,3 +1,12 @@
+.master-container {
+  font-family: Arial;
+}
+
+.directions {
+  margin: 10px;
+  max-width: 600px;
+}
+
 .app {
   margin: 10px;
 }
@@ -51,6 +60,14 @@
   justify-content: center;
 }
 
+.additional-options-container {
+  min-width: 200px;
+}
+
 .option {
   padding: 5px;
+}
+
+.additional-options-input {
+  max-width: 100px;
 }
